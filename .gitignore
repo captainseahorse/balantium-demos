@@ -40,9 +40,6 @@ Thumbs.db
 # Logs
 *.log
 
-# Fortress (not included in public demos)
-fortress/
-
 # Environment variables
 .env
 .env.local
