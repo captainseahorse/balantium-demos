@@ -76,12 +76,16 @@ def create_data_flow_animation(step):
     return fig
 
 def create_coherence_live_demo():
-    """Live demonstration of coherence calculation using actual Balantium math"""
+    """Live demonstration of coherence calculation - conceptual version"""
     st.markdown("""
     <div class='content-box'>
         <h4 style='color: #2E86DE; font-size: 1.5rem; margin-bottom: 20px;'>
-            Live Coherence Calculation
+            Coherence Calculation Concept
         </h4>
+        <p style='color: #A0A0A0; font-size: 0.95rem;'>
+            <em>Interactive demonstration showing the principles of coherence measurement. 
+            Production implementation uses proprietary Balantium mathematics.</em>
+        </p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -99,38 +103,28 @@ def create_coherence_live_demo():
     signal1 = np.sin(t)
     signal2 = np.sin(t + (1 - sync_quality) * np.pi/4) + np.random.randn(200) * noise_level
     
-    if EQUATIONS_AVAILABLE:
-        # Use actual Balantium mathematics
-        try:
-            # Calculate constructive/destructive patterns
-            P = np.maximum(signal1, 0)  # Constructive patterns
-            N = np.maximum(-signal1, 0)  # Destructive patterns
-            
-            # Calculate local coherence between signals
-            coherence_per_element = 1 - np.abs(signal1 - signal2) / (np.abs(signal1) + np.abs(signal2) + 1e-8)
-            coherence_per_element = np.clip(coherence_per_element, 0, 1)
-            
-            # Calculate Balantium Ba using actual equation
-            coherence_score = balantium_Ba(
-                P=P, 
-                N=N, 
-                C=coherence_per_element,
-                R=sync_quality,  # Resonance
-                M=1.0 - noise_level  # Transmission efficiency
-            )
-            
-            # Normalize to 0-1 range for display
-            coherence_score = np.clip(coherence_score / len(signal1), 0, 1)
-            
-            st.metric("Balantium Coherence (Ba)", f"{coherence_score:.4f}", 
-                     help="Calculated using actual Balantium equation A1")
-        except Exception as e:
-            coherence_score = 1 - (noise_level * 0.5 + (1 - sync_quality) * 0.5)
-            st.metric("Coherence Score (Demo)", f"{coherence_score:.4f}")
-            st.caption(f"Error in Ba calculation: {e}")
-    else:
-        coherence_score = 1 - (noise_level * 0.5 + (1 - sync_quality) * 0.5)
-        st.metric("Coherence Score (Demo)", f"{coherence_score:.4f}")
+    # Conceptual coherence calculation
+    # Measures signal alignment and noise resistance
+    coherence_score = 1 - (noise_level * 0.5 + (1 - sync_quality) * 0.5)
+    
+    st.markdown("""
+    <div style='background: rgba(108,92,231,0.1); padding: 20px; border-radius: 10px; margin: 20px 0;'>
+        <h4 style='color: #6C5CE7;'>Coherence Measurement Principles:</h4>
+        <ul style='color: #C0C0C0; font-size: 1.05rem; line-height: 1.8;'>
+            <li><strong>Synchronization:</strong> How well signals align in phase</li>
+            <li><strong>Noise Resistance:</strong> Signal clarity despite interference</li>
+            <li><strong>Constructive/Destructive Balance:</strong> Pattern reinforcement vs. cancellation</li>
+            <li><strong>Transmission Efficiency:</strong> Information preservation through the system</li>
+        </ul>
+        <p style='color: #808080; font-size: 0.9rem; margin-top: 15px;'>
+            <em>Production system: Balantium Ba equation integrates these factors with additional 
+            resonance field terms and multi-scale temporal analysis.</em>
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.metric("Conceptual Coherence Score", f"{coherence_score:.4f}", 
+             help="Simplified demonstration - production uses full Balantium mathematics")
     
     # Visualize
     fig = go.Figure()
@@ -378,12 +372,14 @@ def main():
         initial_sidebar_state="expanded"
     )
     
-    # Show warning if equations not available
+    # Conceptual demo notice
     if not EQUATIONS_AVAILABLE:
-        error_msg = "⚠️ Core mathematics not available - running in demo mode."
-        if IMPORT_ERROR:
-            error_msg += f"\n\nError: {IMPORT_ERROR}"
-        st.warning(error_msg)
+        st.info("""
+        📘 **Conceptual Architecture Demo**  
+        This demonstration shows the architectural principles and system design without exposing proprietary 
+        Balantium mathematics. Interactive visualizations demonstrate coherence concepts using simplified calculations. 
+        Full mathematical implementation available in licensed production version.
+        """)
     
     # Match pitch deck styling
     st.markdown("""
